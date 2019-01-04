@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">PoiskovichOK</string>
+
+    <string name="splash_screen_name">Поисковичок. Рязань.</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="cafe_restaurant">Кафе &amp; Рестораны</string>
+    <string name="cinema">Кинотеатры</string>
+    <string name="enjoy">Развлекательные центры</string>
+    <string name="night_club">Ночные клубы</string>
+    <string name="theater">Театры</string>
+    <string name="museum">Музеи</string>
+    <string name="sport">Фитнес-клубы</string>
+    <string name="sight">Достопримечательности</string>
+    <string name="event">Интересные мероприятия в Рязани</string>
+    <string name="current_action">Текущие cобытия</string>
+    <string name="future_action">Будущие cобытия</string>
+    <string name="contact">Написать разработчикам</string>
+    <string name="creators">Связаться с разработчиками</string>
+
+</resources>

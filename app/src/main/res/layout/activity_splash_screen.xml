@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFF"
+    tools:context=".SplashScreenActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="65px"
+        android:text="@string/splash_screen_name"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="95dp"
+        />
+
+
+    <ImageView
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/ryazan" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="100dp"
+        android:src="@drawable/coffee"
+        />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="303dp"
+        android:layout_marginLeft="140dp"
+        android:src="@drawable/camera"
+        />
+
+
+
+    <FrameLayout
+        android:id="@+id/progress_bars_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="350dp"
+        android:padding="8dp"
+        android:background="@drawable/bounding_box">
+
+        <com.deange.ropeprogressview.RopeProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ropeMax="@integer/progress_max"
+            app:ropeProgress="0"
+            android:indeterminate="false"
+
+
+            />
+
+    </FrameLayout>
+
+
+
+</RelativeLayout>
