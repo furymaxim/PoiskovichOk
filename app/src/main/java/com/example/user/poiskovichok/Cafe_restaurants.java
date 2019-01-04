@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class Cafe_restaurants extends Fragment {
 
@@ -22,7 +23,6 @@ public class Cafe_restaurants extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,@Nullable Bundle savedInstanceState){
         return inflater.inflate(R.layout.activity_cafe_restaurants,container,false);
     }
-
 
 
 

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
@@ -39,11 +40,11 @@ public class MainActivity extends AppCompatActivity
         if (fragment != null){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main , fragment,fragment.getTag());
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
         if (count == 0) {
             super.onBackPressed();
+
         } else {
             getFragmentManager().popBackStack();
         }
