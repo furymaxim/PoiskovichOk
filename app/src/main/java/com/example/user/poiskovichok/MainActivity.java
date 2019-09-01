@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SortFragment.FragmentCallback {
 
     private Toolbar toolbar;
     private FrameLayout redCircle;
@@ -43,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private ExpandableListView expandableListView;
     private ExpandableListAdapter adapter;
-    private NavigationManager navigationManager;
 
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
     private List<Integer> groupImages;
     private HashMap<Integer, List<Integer>> childImages;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         expandableListView = findViewById(R.id.navList);
-        navigationManager = FragmentNavigationManager.getmInstance(this);
 
         View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header, null, false);
         expandableListView.addHeaderView(listHeaderView);
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         gendata();
         addDrawersItem();
         setupDrawer();
+
+
 
         if (savedInstanceState == null)
             selectFirstItemAsDefault();
@@ -161,11 +164,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectFirstItemAsDefault() {
-        if (navigationManager != null) {
-            String firstItem = listDataHeader.get(0);
-            navigationManager.showFragment(firstItem);
-            getSupportActionBar().setTitle(firstItem);
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.home_content,
+                new HomeFragment()).commit();
     }
 
     @Override
@@ -217,45 +217,106 @@ public class MainActivity extends AppCompatActivity {
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+
+                FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+                FrameLayout fragmentSortContainer = findViewById(R.id.fragment_sort_container);
+                FrameLayout fragmentHome = findViewById(R.id.home_content);
+
+                boolean home = true;
+                int childrenCount = adapter.getChildrenCount(groupPosition);
+
+                Fragment selectedFragment = null;
+
+
+                if(childrenCount == 0){
+                   switch ((String)adapter.getGroup(groupPosition)){
+                       case "Главная страница":
+                           home = true;
+                           selectedFragment = new HomeFragment();
+                           break;
+                       case "Текущие мероприятия":
+                           home = false;
+                           selectedFragment = new OngoingActivitiesFragment();
+                           break;
+
+                   }
+
+                    getSupportActionBar().setTitle((String)adapter.getGroup(groupPosition));
+
+
+                    if(!home) {
+                        fragmentContainer.setVisibility(View.VISIBLE);
+                        fragmentSortContainer.setVisibility(View.VISIBLE);
+                        fragmentHome.setVisibility(View.GONE);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                selectedFragment).commit();
+
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_sort_container,
+                                new SortFragment()).commit();
+                    }else{
+                        fragmentContainer.setVisibility(View.GONE);
+                        fragmentSortContainer.setVisibility(View.GONE);
+                        fragmentHome.setVisibility(View.VISIBLE);
+
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.home_content,
+                                selectedFragment)
+                                .commit();
+                    }
+
+
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+
+
+
                 return false;
+
+
             }
         });
 
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+                FrameLayout fragmentSortContainer = findViewById(R.id.fragment_sort_container);
+                FrameLayout fragmentHome = findViewById(R.id.home_content);
 
-                //change fragment when click on item
-                String selectedItem = ((List)(listDataChild.get(listDataHeader.get(groupPosition))))
-                        .get(childPosition).toString();
-                getSupportActionBar().setTitle(selectedItem);
+                boolean home = false;
 
-                String [] items = new String[]{"Главная страница","Кафе & Рестораны"};
+                Fragment selectedFragment = null;
 
-                if(items[0].equals(listDataHeader.get(groupPosition)))
-                    navigationManager.showFragment(selectedItem);
-                else
-                    throw new IllegalArgumentException("Not supported fragment");
+                switch ((String)adapter.getChild(groupPosition,childPosition)){
+                    case "Кафе":
+                        selectedFragment = new CafeFragment();
+                        break;
+                }
+
+
+
+                getSupportActionBar().setTitle((String)adapter.getChild(groupPosition,childPosition));
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, selectedFragment)
+                        .add(R.id.fragment_sort_container, new SortFragment())
+                        .commit();
+
+                if(!home) {
+                    fragmentContainer.setVisibility(View.VISIBLE);
+                    fragmentSortContainer.setVisibility(View.VISIBLE);
+                    fragmentHome.setVisibility(View.GONE);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_sort_container,
+                            new SortFragment()).commit();
+                }
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
 
                 return false;
 
-
-                /*String selectedItem = ((List)(listDataChild.get(listDataHeader.get(groupPosition))))
-                        .get(childPosition).toString();
-                getSupportActionBar().setTitle(selectedItem);
-
-                String[] items = new String[]{"something"};
-
-                if(items[0].equals(listDataChild.get(groupPosition)))
-                    navigationManager.showFragment(selectedItem);
-                else
-                    throw new IllegalArgumentException("Not supported fragment");
-
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-
-                return false;*/
             }
         });
     }
@@ -293,6 +354,36 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateAlertIcon() {
         // if alert count extends into two digits, just show the red circle
+
+    }
+
+
+    @Override
+    public void messageFromSortFragment(CharSequence text) {
+       CafeFragment cafeFragment = (CafeFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+       if(cafeFragment !=null){
+           cafeFragment.setText(text);
+       }else{
+           CafeFragment newFragment = new CafeFragment();
+           Bundle args = new Bundle();
+           args.putCharSequence("message", text);
+           newFragment.setArguments(args);
+
+           FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+           transaction.replace(R.id.fragment_container, newFragment);
+           transaction.addToBackStack(null);
+
+           transaction.commit();
+       }
+
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if(fragment instanceof SortFragment){
+            SortFragment sortFragment = (SortFragment)fragment;
+            sortFragment.setFragmentCallback(this);
+        }
 
     }
 }
