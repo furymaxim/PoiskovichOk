@@ -164,8 +164,10 @@ public class MainActivity extends AppCompatActivity implements SortFragment.Frag
     }
 
     private void selectFirstItemAsDefault() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.home_content,
-                new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_content, new HomeFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -241,18 +243,18 @@ public class MainActivity extends AppCompatActivity implements SortFragment.Frag
 
                    }
 
-                    getSupportActionBar().setTitle((String)adapter.getGroup(groupPosition));
+
 
 
                     if(!home) {
                         fragmentContainer.setVisibility(View.VISIBLE);
                         fragmentSortContainer.setVisibility(View.VISIBLE);
                         fragmentHome.setVisibility(View.GONE);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                selectedFragment).commit();
-
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_sort_container,
-                                new SortFragment()).commit();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, selectedFragment)
+                                .replace(R.id.fragment_sort_container, new SortFragment())
+                                .addToBackStack(null)
+                                .commit();
                     }else{
                         fragmentContainer.setVisibility(View.GONE);
                         fragmentSortContainer.setVisibility(View.GONE);
@@ -261,9 +263,11 @@ public class MainActivity extends AppCompatActivity implements SortFragment.Frag
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.home_content,
                                 selectedFragment)
+                                .addToBackStack(null)
                                 .commit();
                     }
 
+                    getSupportActionBar().setTitle((String)adapter.getGroup(groupPosition));
 
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                 }
@@ -294,24 +298,21 @@ public class MainActivity extends AppCompatActivity implements SortFragment.Frag
                 }
 
 
-
-                getSupportActionBar().setTitle((String)adapter.getChild(groupPosition,childPosition));
-
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, selectedFragment)
-                        .add(R.id.fragment_sort_container, new SortFragment())
-                        .commit();
-
                 if(!home) {
                     fragmentContainer.setVisibility(View.VISIBLE);
                     fragmentSortContainer.setVisibility(View.VISIBLE);
                     fragmentHome.setVisibility(View.GONE);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragment).commit();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, selectedFragment)
+                            .replace(R.id.fragment_sort_container, new SortFragment())
+                            .addToBackStack(null)
+                            .commit();
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_sort_container,
-                            new SortFragment()).commit();
+
                 }
+
+
+                getSupportActionBar().setTitle((String)adapter.getChild(groupPosition,childPosition));
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
 
@@ -320,6 +321,16 @@ public class MainActivity extends AppCompatActivity implements SortFragment.Frag
             }
         });
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(getFragmentManager().getBackStackEntryCount() > 0)
+            getFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
